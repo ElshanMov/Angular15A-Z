@@ -163,14 +163,22 @@ HTML obyektlərinin attribute'larının dəyərlərini component class'ında ver
 import { Component } from '@angular/core';
 
 @Component({
+
   selector: 'app-root',
-  template: `
+
+  template: 
+
   <button [disabled]="disabled">Push<button>
-  `,
+  ,
+
   styleUrls: ['./app.component.scss']
+
 })
+
 export class AppComponent {
+
   disabled:boolean=true;
+  
 }
 
 -------------------------------------------------
