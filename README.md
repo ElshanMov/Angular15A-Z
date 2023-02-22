@@ -59,7 +59,9 @@ Component'ləri, hər hansısa bir hissənin necə görünəcəyini, hansı funk
 Component'lərdəki HTML'ləri template'lər də yazırıq. Template'lərə HTML'in genişləndirilmiş versiyası kimi baxılmalıdır çünki Angulara xas directive, pipe kimi strukturlardan istifadə edirik.
 
 Qeyd : Template'i external olmadanda yaza bilərik, bunun üçün template keyword'ü ilə string interpolation istifadə etməyimiz kifayətdir:
+
 ![template](https://dotnettutorials.net/wp-content/uploads/2018/09/word-image-171.png)
+
 
 **styleUrls :**
 Array olaraq declare olunubdur yəni bir neçə style path'ni qeyd edə bilərik.
@@ -85,3 +87,103 @@ Bu decorotor ilə əlaqəli componentin: selector, template, style məlumatları
 Component'lər declare olur, module'lar isə import :)
 
 ## Lesson4 - Data Binding Nədir? 
+
+Data binding, Angular da component class'ında olan modellər və ya funksiyaların view'larla əlaqə yaratmağını təmin edən strukturlardır.
+
+Data binding əlaqə strukturan görə bir neçə yerə bölünür:
+
+> Text Interpolations
+> Property Binding
+> Event Binding
+> Two-way Binding
+> Attribute Binding
+> Class Binding
+> Style Binding
+
+### Text Interpolations
+
+Template'in içərisində component class'ında olan field/property dəyərini yazdırmaq üçün istifadə olunan binding üsuludur.
+
+![textinterpolation](https://user-images.githubusercontent.com/62793862/220535499-6683f726-0442-4b1b-96f5-b653d70e0a76.png)
+
+Interpolation üsulu ilə binding üçün `{{}}` istifadə olunaraq property dəyərini mətnə və ya attribute'a bind edirik.
+
+### Property Binding
+
+Property binding, template içərisindəki HTML obyektlərinə və ya directive'lərə component class'ında olan dataların property olaraq bind etməsini təmin edən üsuldur. Property'ni bind etmək üçün `[]` istifadə olunur.
+
+![propertybinding](https://user-images.githubusercontent.com/62793862/220537992-e3d53ac0-b2cf-48ee-9c24-8f031935a30c.png)
+
+Property binding ilə selector'la istinad edilən component'lərin içərisindəki *input property'lərə* də dəyər assign edə bilərik :
+
+![propselector](https://user-images.githubusercontent.com/62793862/220540803-1caa6c83-36d2-4b33-b8e5-a77a6dcb7f12.png)
+
+
+### Event Binding
+
+Event binding, mouse click'ləyəndə, klaviatura düymələrini basdıqda və ya digər istifadəçi event'larında event trigger etməyimizi təmin edən binding üsuludur. Hər hansısa event'ı component'dəki function'a bind etmək üçün `()` istifadə olunur.
+
+![eventBinding](https://user-images.githubusercontent.com/62793862/220553281-b4b47e05-28ea-4263-b95f-11d5c4e1827a.png)
+
+> on-click şəklindədə event binding edə bilərik:
+
+`<button on-click="btnClick()">Click me</button>`
+
+> event'lara qarşılıq gələn funksiyaları nöktəli vergüllə ayıra bilərik (Multiple event handlers):
+
+`<button on-click="btnClick(); btnClick2()">Click</button>`
+
+> hər-hansısa keyword event'ında aşağıdakı kimi HTML obyektinə bind edə bilərik:
+
+`<input (keydown.shift.a)="aEvent()" value="Aaa">`
+`<input (keydown.shift.b)="bEvent()" value="Bbb">`
+
+### Two-way Binding
+
+Two-binding'i əsasən form elementlərində istifadə edirik. Template içərisindəki HTML obyektinin value'su dəyişdikdə əlaqəli obyektə bind edilmiş component class'ı içərisindəki field/property dəyəri də anlıq olaraq dəyişdirilməsini və eyni zamanda tam tərsi vəziyyətində keçərli olmasını təmin edən binding üsuludur.
+
+`[(ngModel)]` directive'i ilə two-way binding prosesini edirik. Bu directive'in istifadə oluna bilinməsi üçün `FormsModule` layihənin ana module'na import edilməlidir.
+
+![image](https://user-images.githubusercontent.com/62793862/220559425-363d007a-ff10-450b-b8ce-a43fe5029570.png)
+
+![two-way](https://user-images.githubusercontent.com/62793862/220559163-938aa4bf-3172-4bef-a8f5-f6884f12aeaf.gif)
+
+**Qeyd :** `[(ngModel)]` directive ilə bind olunmuş HTML obyektində olaraq dəyişiklik olarsa, `(ngModelChange)` event'i ilə hər hansısa bir event'i trigger edib, daxil olunan dəyərin doğruluğunu anlıq olaraq yoxlaya bilərik.
+
+![image](https://user-images.githubusercontent.com/62793862/220559939-de63ffb2-5ff8-48e2-9a7b-4370be07291c.png)
+
+HTML obyektləri üçün istifadə olunan `(change)` eventi'də mövcuddur. Bu event `[(ngModel)]` directive'i olmadan dəyişikliklərə event fırlatmaq üçündür. Yəni `(ngModelChange)`, `[(ngModel)]` directive'i ilə birlikdə istifadə olunarkən `(change)` event’ı isə tək istifadə edilməkdədir.
+
+### Attribute Binding:
+
+HTML obyektlərinin attribute'larının dəyərlərini component class'ında verilməsini təmin edən binding üsuludur.
+
+------------------------------------------------
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  template: `
+  <button [disabled]="disabled">Push<button>
+  `,
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent {
+  disabled:boolean=true;
+}
+
+-------------------------------------------------
+
+![image](https://user-images.githubusercontent.com/62793862/220562316-c9edb06e-be89-4b43-b60c-7995e5c5745b.png)
+
+### Style and Class Binding:
+HTML obyektinin style və ya class dəyərlərini component class'ı ilə bind edə bildiyimiz data binding üsuludur.
+
+![image](https://user-images.githubusercontent.com/62793862/220565299-6e632ff9-06be-40f1-8762-1b8005a537d6.png)
+
+Angular da **Change Detection** Alqoritimi:
+
+Template'də event trigger olduqda və ya istifadəçin etdiyi bir şey nəticəsində modelin value'su dəyişərsə, component class'nı məlumatlandırmaq və Template ilə sinxronizasiya təmin etmək üçün **Change Detection** alqoritmi istifadə olunur.
+
+## Lesson - 5 Interpolation Syntax Nədir?
