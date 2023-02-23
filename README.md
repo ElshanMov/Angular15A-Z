@@ -195,3 +195,27 @@ Angular da **Change Detection** Alqoritimi:
 Template'də event trigger olduqda və ya istifadəçin etdiyi bir şey nəticəsində modelin value'su dəyişərsə, component class'nı məlumatlandırmaq və Template ilə sinxronizasiya təmin etmək üçün **Change Detection** alqoritmi istifadə olunur.
 
 ## Lesson - 5 Interpolation Syntax Nədir?
+
+Angular'da component class'ı içərisindəki hər hansısa field, property dəyərini `{{...}}-interpolation syntax` operatoru vasitəsilə HTML içərisində istifadə olunmasına Text Interpolation deyilir.
+
+*Interpolation, One-Way data binding'dir.*
+
+## Interpolation'da nələri istifadə etmək olmaz :
+ Interpolation ilə sadəcə property və ya field dəyərini template'də əks etdirmək üçün istifadə edirik. Buna görə də layihənin state`ni dəyişdirəcək hər hansısa prosesi icra etmək mümkün deyil.
+
+Layihənin state'ni dəyişməyinə səbəb olacaq keywordlər Interpolation ilə istifadə oluna bilməz:
+> Assign operatorları `=, +=, -=`
+> `new`, `typeof`, `instanceof` və s. keyword'ləri
+> `:` operatoru
+> `++,--` - Increment, Decrement operatorları
+> Bitwise operatorları
+
+**Qeyd: Interpolation'da iki dəyişən ilə arifmetik proses, konkatenasiya, template referansı istifadə edə bilərik və ya hər hansısa bir funksiyanı call edə bilərik.**
+
+**Qeyd: Interpolation'da Script/HTML kodları işə salmaq mümkün deyil. Angular, Interpolation ilə DOM'a əlavə edəcəyimiz kontenti hər şeydən əvvəl sterizasiya edərək *Cross-Site Scripting Security Bugs(XSS)* xətalarına qarşı tədbir alır. Interpolation ilə gələn Script və HTML kodları mətn olaraq oxunur**
+
+## ngNonBindable: 
+Interpolation operatorunun compile edilməsini istəmiriksə `ngNonBindable` keyword'nu istifadə edə bilərik.
+`<p ngNonBindable>{{text}} world</p>`
+
+Angular da Interpolation ilə pipes - `{{text | uppercase}}`, nullable operator-`(person?.name)`, non-null assertion(iddia)-`(person!.name)` kimi strukturları istifadə edə bilirik.
