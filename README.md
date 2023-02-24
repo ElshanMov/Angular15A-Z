@@ -298,3 +298,36 @@ HTML etiketlərinin *style* attribut dəyərini dinamik olaraq idarə edəbilmə
 
 ## Lesson - 7 Custom Directive necə yaradılır?
 
+directives folder'i altında example adında custom directive yaratmaq üçün yazacağımız command:
+
+  `ng g d directives/example`
+
+  ![directive](https://user-images.githubusercontent.com/62793862/221235132-d8d33547-7150-4fbb-a2a2-124367046e70.png)
+
+ Directive yaradılan zaman ana module'a declare edilməlidir. Directive'in directive ola bilməsi üçün `@Directive` decorator'u tərəfindən işarələnməlidir.
+
+ ### Directive'in class və ya attribute olaraq istifadəsi
+
+ ![customDirectiveSelectorName](https://user-images.githubusercontent.com/62793862/221240789-1688d6ef-cbfa-4b41-bb33-4f9a8ed109d9.png)
+
+ ### Custom directive ilə elementi əldə etmək və parametr qəbul edərək manipulyasiya prosesi aparmaq.
+
+ **Qeyd:** JQuery paketi istifadə olunduğu üçün `declare var $:any` yazaraq component class'ında JQuery istifadə edə bilərik.
+
+ ![directiveInput](https://user-images.githubusercontent.com/62793862/221248458-348d9d49-cfdc-4501-b4a8-6b134b62c71d.png)
+
+ **RESULT:** 
+
+ https://user-images.githubusercontent.com/62793862/221250598-f9331218-c56b-4137-b508-592fce939aa2.mp4
+
+ ### HostListener decorator'u
+
+ Yaradılan directive'in hansı event ilə işləyəcəyini təyin etdiyimiz decorator'dur.
+
+ https://user-images.githubusercontent.com/62793862/221254255-774821c1-a95b-4317-8324-9fb06dda4c7e.mp4
+
+ 
+
+
+
+
