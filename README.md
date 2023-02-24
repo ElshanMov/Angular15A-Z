@@ -326,8 +326,13 @@ directives folder'i altında example adında custom directive yaratmaq üçün y
 
  https://user-images.githubusercontent.com/62793862/221254255-774821c1-a95b-4317-8324-9fb06dda4c7e.mp4
 
- 
 
+### HostBinding decorator'u
 
+HostBinding ilə directive'in yazıldığı DOM obyektinin hər hansısa bir xüsusiyyətinə bind olaraq manipulyasiya edirik.
+
+![hostBinding](https://user-images.githubusercontent.com/62793862/221270789-39aff54e-fb83-4245-a8a2-04cfc2e28d55.png)
+
+## Lesson - 8 Structural Directives
 
 
