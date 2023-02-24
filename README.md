@@ -71,6 +71,7 @@ Component class'ı içərisində JS, TS, JQeury, DI, business logic yazırıq. Y
 
 **selector :**
 Component'in selector dəyəri ilə istinad prosesini edirik (yalnız HTML'lərdə istifadə olunur).
+
 `<app-root></app-root>`
 
 **Qeyd: Component'lər bir-birini selector ilə istinad edə bilməsi üçün ya eyni module'da olmalıdırlar ya da olduqları module'dan export olmalıdırlar. Bir component'in istifadə olunması üçün birbaşa və ya dolayı yolla ana module'da import olmalıdırlar əgər öz module'nan başqa module'da istifadə olunacaqsa export etmək lazımdır.**
@@ -200,7 +201,7 @@ Angular'da component class'ı içərisindəki hər hansısa field, property dəy
 
 *Interpolation, One-Way data binding'dir.*
 
-## Interpolation'da nələri istifadə etmək olmaz :
+### Interpolation'da nələri istifadə etmək olmaz :
  Interpolation ilə sadəcə property və ya field dəyərini template'də əks etdirmək üçün istifadə edirik. Buna görə də layihənin state`ni dəyişdirəcək hər hansısa prosesi icra etmək mümkün deyil.
 
 Layihənin state'ni dəyişməyinə səbəb olacaq keywordlər Interpolation ilə istifadə oluna bilməz:
@@ -214,8 +215,86 @@ Layihənin state'ni dəyişməyinə səbəb olacaq keywordlər Interpolation il�
 
 **Qeyd: Interpolation'da Script/HTML kodları işə salmaq mümkün deyil. Angular, Interpolation ilə DOM'a əlavə edəcəyimiz kontenti hər şeydən əvvəl sterizasiya edərək *Cross-Site Scripting Security Bugs(XSS)* xətalarına qarşı tədbir alır. Interpolation ilə gələn Script və HTML kodları mətn olaraq oxunur**
 
-## ngNonBindable: 
+### ngNonBindable: 
 Interpolation operatorunun compile edilməsini istəmiriksə `ngNonBindable` keyword'nu istifadə edə bilərik.
+
 `<p ngNonBindable>{{text}} world</p>`
 
 Angular da Interpolation ilə pipes - `{{text | uppercase}}`, nullable operator-`(person?.name)`, non-null assertion(iddia)-`(person!.name)` kimi strukturları istifadə edə bilirik.
+
+## Lesson - 6 Directives (ngFor, ngSwitch, ngIf, ngClass, ngStyle)
+
+### Directive Nədir?
+
+ Directive'lər, HTML elementlərinə əlavə xüsusiyyətlər və davranışlar əlavə etmək üçün istifadə olunan xüsusi etiketlərdir. Directive'lərə DOM obyektlərinə manipulyasiya etməyimizi təmin edən strukturlarda deyə bilərik. Angular'da davranışlarına görə fərqli olan hazır directive'lər mövcuddur, bundan əlavə **custom directive**'lərdə yarada bilərik.
+
+HTML elementinə, directive ilə nəzərdə tutulan davranışı mənimsətmək üçün directive'in selector'nu yazmağımız kifayətdir.
+
+ `template:<div *ngIf=" flag==true ">....</div>`
+
+
+### Built-in (Hazır) directive'lər Hansılardır?
+> ngFor
+> ngSwitch
+> ngIf
+> ngClass
+> ngStyle
+> ngModel
+> ngNonBindable
+
+Əsasən istifadə olunan directive'lər bunlardır amma başqa built-in directive'lərdə mövcuddur.
+
+### ngFor Directive
+ HTML obyektləri üzərində iterasiya proseslərini həyata keçirmək üçün istifadə edirik.
+
+![ngFor](https://user-images.githubusercontent.com/62793862/221155816-1efbd861-da6a-4b1b-a649-321ed0369f6c.png)
+
+
+ngFor directive ilə **index** dəyərinidə ala bilirik.
+
+`template: <div *ngFor="let name of names;index as i">{{name}} - {{i}}</div>`
+
+Və ya *index*, *first*, *last*, *even* və *odd* keyword'ləri ilə ngFor directive'ni istifadə edə bilərik.
+
+![indexetc](https://user-images.githubusercontent.com/62793862/221171794-19d54201-7b48-40cd-882b-dfc948305d27.png)
+
+### ngIf Directive
+Müəyyən şərtə görə HTML obyektlərinin visibility'ni dəyişmək üçün istifadə olunan directive'dir.
+
+![ngIf](https://user-images.githubusercontent.com/62793862/221174649-af5e1c20-c5bb-4bc3-a756-e544f1619a97.png)
+
+**if/else** məntiqində istifadə etmək üçün `ng-template` istifadə etməliyik.
+
+![ngTemplate](https://user-images.githubusercontent.com/62793862/221175362-07c7933b-2401-45ba-bc54-900493db23c1.png)
+
+ ngIf directive'ində else/if məntiqində davranış yoxdur. Buna görə aşağıdakı məntiqdən istifadə edə bilərik:
+
+ 
+![elseif](https://user-images.githubusercontent.com/62793862/221182369-886c51d0-71b3-41b5-9bc2-aee7723d727b.png)
+
+### ngSwitch Directive
+ngIf kimi bu directive'də müəyyən şərtə görə HTML obyektlərinin visibility'ni dəyişmək üçün istifadə olunan directive'dir.
+
+![ngSwitch](https://user-images.githubusercontent.com/62793862/221183579-3a8e0e20-be5b-471f-ac29-e1f633bc288f.png)
+
+**Qeyd:** Görüldüyü kimi `ngSwitch` directive'i, ngSwitchCase və ngSwitchDefault directive'ləri ilə birlikdə istifadə olunur.
+
+### ngClass Directive
+HTML etiketlərinin *class* attribut dəyərini dinamik olaraq idarə edəbilməliyimizi təmin edən directive'dir.
+
+![ngClass](https://user-images.githubusercontent.com/62793862/221185646-143daeae-4aef-4c65-bcfc-dc344f3ca6ee.png)
+
+
+### ngStyle Directive
+HTML etiketlərinin *style* attribut dəyərini dinamik olaraq idarə edəbilməliyimizi təmin edən directive'dir.
+
+![ngStyle](https://user-images.githubusercontent.com/62793862/221184726-3bc68cec-54a9-41ab-8016-69118c8cd11f.png)
+
+### ngModel & ngNonBindable Directive
+
+`ngModel` direvtive'i ilə **two-way** binding prosesini həyata keçiririk.
+
+`ngNonBindable` directive'i ilə **text interpolation** xüsusiyyətinin təsirsiz olmasını həyata keçiririk.
+
+## Lesson - 7 Custom Directive necə yaradılır?
+
