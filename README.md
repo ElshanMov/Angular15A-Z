@@ -334,5 +334,31 @@ HostBinding ilə directive'in yazıldığı DOM obyektinin hər hansısa bir xü
 ![hostBinding](https://user-images.githubusercontent.com/62793862/221270789-39aff54e-fb83-4245-a8a2-04cfc2e28d55.png)
 
 ## Lesson - 8 Structural Directives
+HTML obyektlərini və DOM struktunu manipulyasiya edərək səhifə üzərində dəyişikliklər etməyimizi təmin edən directive tipi/növüdür.
+
+ Structural directive'lərin əsas fərqləndirici xüsusiyyəti style'ı yox, birbaşa DOM-un anatomiyasına təsir edir (elementin görünüb-görünməməsi-`*ngIf`, elementin repeat olunması-`*ngFor`).
+ Structural directive'lə * simvolu ilə çağrılır.
+
+ Structural directive'lərdə istifadə olunan `TemplateRef` və `ViewContainerRef` referansları bilinməlidir. DOM-un manipulyasiyası zamanı directive'in istifadə olunduğu template'i **TemplateRef**, template'in kontentini ehtiva edən isə **ViewContainerRef** referansıdır (HTML-ə elementləri əlavə etmək, çıxartmağa yarayır).
+
+### Custom structural directive yaratmaq
+
+![customIf](https://user-images.githubusercontent.com/62793862/221418632-f43b8da2-b5a6-45cc-a65a-89d3f8402526.png "Custom If")
+
+<br/>
+
+![ngFor](https://user-images.githubusercontent.com/62793862/221419215-0c225fdc-8ca3-442f-9087-dcffe58f9e6c.png "Custom For")
+
+<br/>
+
+![ngForA](https://user-images.githubusercontent.com/62793862/221420168-f5ed45a1-0914-473e-8a17-ac94a7ccb6d8.png "Custom For (implicit keyword'u istifadə etdikdə HTML`də declare edərək birbaşa istifadə etmək olur.)")
+
+## Lesson - 9 Pipe
+
+
+
+
+
+
 
 
