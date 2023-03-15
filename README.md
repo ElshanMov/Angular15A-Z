@@ -37,15 +37,15 @@ Angular CLI'ı yükləmək üçün lazım olan command:
 
 ### Angularda istifadə olunan strukturlar :
 
-> `Component` - Componentlər layihənin görüntü layer'ni ifadə edən və data modelləri ilə əlaqə quraraq səhifələri istifadəçilərə servis edən strukturlardır (MVC - nin özü :) )
-> `Directive` - HTML obyektlərinin davranışlarını və görünüşlərini idarə edə bildiyimiz xüsusi etiketdir.
-> `Module` - layihədəki strukturları qruplaşdırmağı təmin edir. Module'lar vasitəsilə modulyar proqramlaşdırma edə bilirik yəni layihənin parçalarını (components, services və s.) bir yerə yığaraq vahid şəkildə istifadə oluna bilməsi təmin olunur. Module'lar ilə səhifələrin yüklənməsini daha da optimizasiya etmək üçün **lazy loading** (ehtiyyac olduqda əlaqəli strukturların səhifəyə yüklənməsi ) yanaşmasını implementasiya edə bilirik.
-> `Decorator` - TypeScriptin xüsusiyyətidir və Angularda istifadə olunur (`@Components`,`@Injectable`). Decarotorlar class member'lərinə metadata'lar əlavə edir.
-> `Templates` - Pure HTML'lər deyillər. Template'lərin içində Angulara xas strukturları implementasiya etmək olur.
-> `Guard` - Guard'lar ilə layihə üzərində nəzarət mexanizmasını təmin edirik yəni authorization, authentication (JWT, session, cookie).
-> `Pipes` - dataları istifadəçiyə görsətmədən əvvəl formatlaşdırmaq üçün istifadə olunur.
-> `Data Binding` - Component və UI arasındakı datanı bir-birinə bağlayan mexanizmadır.
-> `Service` > `Dependency Injection` > `Metadatas`
+- `Component` - Componentlər layihənin görüntü layer'ni ifadə edən və data modelləri ilə əlaqə quraraq səhifələri istifadəçilərə servis edən strukturlardır (MVC - nin özü :)
+- `Directive` - HTML obyektlərinin davranışlarını və görünüşlərini idarə edə bildiyimiz xüsusi etiketdir.
+- `Module` - layihədəki strukturları qruplaşdırmağı təmin edir. Module'lar vasitəsilə modulyar proqramlaşdırma edə bilirik yəni layihənin parçalarını (components, services və s.) bir yerə yığaraq vahid şəkildə istifadə oluna bilməsi təmin olunur. Module'lar ilə səhifələrin yüklənməsini daha da optimizasiya etmək üçün **lazy loading** (ehtiyyac olduqda əlaqəli strukturların səhifəyə yüklənməsi ) yanaşmasını implementasiya edə bilirik.
+- `Decorator` - TypeScriptin xüsusiyyətidir və Angularda istifadə olunur (`@Components`,`@Injectable`). Decarotorlar class member'lərinə metadata'lar əlavə edir.
+- `Templates` - Pure HTML'lər deyillər. Template'lərin içində Angulara xas strukturları implementasiya etmək olur.
+- `Guard` - Guard'lar ilə layihə üzərində nəzarət mexanizmasını təmin edirik yəni authorization, authentication (JWT, session, cookie).
+- `Pipes` - dataları istifadəçiyə görsətmədən əvvəl formatlaşdırmaq üçün istifadə olunur.
+- `Data Binding` - Component və UI arasındakı datanı bir-birinə bağlayan mexanizmadır.
+- `Service` > `Dependency Injection` > `Metadatas`
 
 ## Lesson3 - Component Nədir?
 
@@ -97,13 +97,13 @@ Data binding, Angular da component class'ında olan modellər və ya funksiyalar
 
 Data binding əlaqə strukturan görə bir neçə yerə bölünür:
 
-> Text Interpolations
-> Property Binding
-> Event Binding
-> Two-way Binding
-> Attribute Binding
-> Class Binding
-> Style Binding
+- Text Interpolations
+- Property Binding
+- Event Binding
+- Two-way Binding
+- Attribute Binding
+- Class Binding
+- Style Binding
 
 ### Text Interpolations
 
@@ -491,3 +491,17 @@ export class AppModule {}
 
 Currency pipe'nın default dəyəri dəyişdirildikdən sonra kodun nəticəsi
 ![image](https://user-images.githubusercontent.com/62793862/224980463-68203783-1970-4b93-afe5-38a30389668c.png)
+
+## Lesson - 10 Input/Output Communication | Parent to Child & Child to Parent
+
+Angular'da Component Communication, component'lər arasında data və event paylaşma prosesini ifadə edən anlayışdır. Angular, componentlər arasında data paylaşmaq üçün bir neçə üsul mövcuddur.
+
+1. Input və Output decorators: Componentlər arasında data qəbul etmək və ya data göndərmək üçün `@Input` və `@Output` decorator'larından istifadə edə bilərik. Parent component'dən Child component'ə **(PtC)** data göndərmək üçün **@Input** decorator'undan, Child'dan Parent'a **(CtP)** göndərmək üçün isə **@Output** decorator'undan istifadə edirik.
+
+2. Services: Servislər, component'lər arasında data göndərmək üsullarından biridir. Component, service çağıra bilər və service, data'nı alıb başqa component'ə göndərə bilər.
+
+3. Event Binding: Component, başqa component'də baş verən event'ı tutmaq üçün event binding istifadə edə bilər. Beləliklə, Bir component, başqa bir component'də baş verən event'ı tuta bilər və lazım olan prosesi apara bilərik.
+
+4. RxJS: RxJS, component'lər arasında data axınını idarə etmək üçün istifadə olunan library'dir. Angular'da component'lər arasında olan əlaqələri idarə etmək üçün çox istifadə olunur.
+
+Component Communication üçün hələlik **PtC** və **CtP** communication'larına baxacayıq.
