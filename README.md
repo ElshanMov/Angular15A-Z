@@ -504,4 +504,99 @@ Angular'da Component Communication, component'lər arasında data və event payl
 
 4. RxJS: RxJS, component'lər arasında data axınını idarə etmək üçün istifadə olunan library'dir. Angular'da component'lər arasında olan əlaqələri idarə etmək üçün çox istifadə olunur.
 
-Component Communication üçün hələlik **PtC** və **CtP** communication'larına baxacayıq.
+Angular'da component'lər arasında data əlaqəsi qurmaq üçün Input və Output decorator'larını istifadə edirlər. Input decorator'u, bir component'ə data girişini təmin edir, Output decorator'u isə bir component'dən data çıxışını təmin edir.
+
+### Input Decorator
+
+Input decorator'u, component'ə kənardan data girişini təmin edir.
+
+Misal olaraq, şagird component'i olsun və ad, soyad, nömrə kimi məlumatları gösdərməlidir. Bu component'ə kənardan gələcək şagird məlumatlarını ötürmək üçün Input decorator'u istifadə oluna bilər.
+
+```ts I'm A tab
+import { Component, Input } from "@angular/core";
+
+@Component({
+  selector: "app-student",
+  template: `
+    <div>
+      <h2>{{ name }}</h2>
+      <p>{{ surname }}</p>
+      <p>{{ number }}</p>
+    </div>
+  `,
+})
+export class StudentComponent {
+  @Input() name: string;
+  @Input() surname: string;
+  @Input() number: number;
+}
+```
+
+Bu component, name, surname, number field'larına Input decorator'u tətbiq edir. Bu field'lar, component'ə kənardan gələcək şagird məlumatlarını saxlayacaq.
+
+```ts I'm B tab
+import { Component } from "@angular/core";
+
+@Component({
+  selector: "app-root",
+  template: `
+    <app-student name="John" surname="Doe" number="1234"></app-student>
+  `,
+})
+export class AppComponent {}
+```
+
+Parent-component, child-component'i çağırır və şagird məlumatlarını Input field'ları vasitəsilə child-component'ə göndərir.
+
+### Output Decorator
+
+Output decorator'u, bir component'dən kənara data çıxışını təmin edir. Component, Output decorator'u ilə bildirilən event'ları trigger edərək dataları kənara göndərir.
+
+Misal olaraq, sayğaç component'imiz olsun. Bu component, buton'a click olduqda sayğacı artırsın və artışı event vasitəsilə kənara bildirsin.
+
+```ts I'm A tab
+import { Component, EventEmitter, Output } from "@angular/core";
+
+@Component({
+  selector: "app-counter",
+  template: `
+    <div>
+      <h2>{{ count }}</h2>
+      <button (click)="increment()">Increment</button>
+    </div>
+  `,
+})
+export class CounterComponent {
+  @Output() countChange = new EventEmitter<number>();
+
+  count = 0;
+
+  increment() {
+    this.count++;
+    this.countChange.emit(this.count);
+  }
+}
+```
+
+Bu component, `count` field'na və `countChange` event'na Output decorator'nu tətbiq edir. Bu event, sayğacdakı artımları kənara bildirir.
+
+```ts I'm B Tab
+@Component({
+  selector: "app-root",
+  template: `
+    <app-counter (countChange)="onCountChange($event)"></app-counter>
+    <p>Count: {{ count }}</p>
+  `,
+})
+export class AppComponent {
+  count = 0;
+
+  onCountChange(count: number) {
+    this.count = count;
+  }
+}
+```
+
+Parent component(AppComponent), Child component'i çağırır və `countChange` event'ni dinləyir. `onCountChange` funksiyası, hər dəfə trigger olanda `count` field'nı güncəlləyir və ekranda gösdərir.
+
+## Lesson - 11 Component Life Cycle Hook Nədir?
