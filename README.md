@@ -600,3 +600,20 @@ export class AppComponent {
 Parent component(AppComponent), Child component'i çağırır və `countChange` event'ni dinləyir. `onCountChange` funksiyası, hər dəfə trigger olanda `count` field'nı güncəlləyir və ekranda gösdərir.
 
 ## Lesson - 11 Component Life Cycle Hook Nədir?
+
+Angular'da component'in yaradıldığı andan etibarən silindiyi/məhv edildiyi ana qədər olan müddət də müəyyən yerlərdə işləməsi üçün olan metodlar mövcuddur. Bu metodlar: layihənin istifadəsi zamanı, component'in data güncəlləməsi, DOM ilə əlaqəyə keçməsi və ya track edilən data'lar da olan dəyişikliklər kimi vəziyətlər də işə düşür, yəni hər metod component'in fərqli mərhələrin də işləyir və buna görə də fərqli vəzifələri yerinə yetirirlər.
+
+Bu metodlar əsasən aşağıdakı ardıcıllıqda işləyir:
+
+> ngOnChanges => ngOnInit => ngDoCheck => ngAfterContentInit => ngAfterContentChecked => ngAfterViewInit => ngAfterViewChecked => ngOnDestroy
+
+- ngOnChanges: Component'də Input field'larında dəyişiklik olduqda işə düşür və yeni dəyərləri vermək üçün istifadə oluna bilər (OnChanges interface ilə implement oluna bilər).
+- ngOnInit : Component ilk dəfə yaradılanda işə düşür (OnInit interface ilə implement oluna bilər).
+- ngDoCheck : Angular, component'in güncəllənməsi vəziyyətində tez-tez bu metodu işə salır (DoCheck interface ilə implement oluna bilər). Həmçinin DoCheck'in change detection dövründə işlədiyini bilməyimizdə fayda var.
+- ngAfterContentInit : Component'in content'i (<ng-content></ng-content>) ilkdəfə yaradılanda işə düşür (AfterContentInit interfaci ilə implement oluna bilər).
+- ngAfterContentChecked : Component'in content'i güncəlləndikdə işə düşür (AfterContentChecked interface ilə implement oluna bilər).
+- ngAfterViewInit : Component'in view'u ilk dəfə yaradıldığnda, təni template tam olaraq handle olduq da işə düşür. (AfterViewInit interface'i ilə implement oluna bilər).
+- ngAfterViewChecked : Component'in view'u güncəlləndikdə işə düşür (AfterViewChecked interface ilə implement oluna bilər).
+- ngOnDestroy : Component'in silinməsi/məhv olunması zamanı işə düşür (OnDestroy ilə implement oluna bilər).
+
+## Lesson - 12 Angular Forms Yanaşmaları və Əsas Konsepsiyaları Nələrdir?
