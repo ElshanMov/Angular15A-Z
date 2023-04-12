@@ -616,4 +616,175 @@ Bu metodlar əsasən aşağıdakı ardıcıllıqda işləyir:
 - ngAfterViewChecked : Component'in view'u güncəlləndikdə işə düşür (AfterViewChecked interface ilə implement oluna bilər).
 - ngOnDestroy : Component'in silinməsi/məhv olunması zamanı işə düşür (OnDestroy ilə implement oluna bilər).
 
-## Lesson - 12 Angular Forms Yanaşmaları və Əsas Konsepsiyaları Nələrdir?
+## Lesson - 12 Angular Forms Yanaşmaları və Əsas Anlayışları Nələrdir?
+
+Web Form, istifadəçidən data alaraq serverə göndərməyimizi təmin edən HTML elementidir. Web form'lar, istifadəçilərdən data girməsini təmin etməkdən başqa, girilən datanı təsdiqləmə, data formatını müəyyənləşdirmək, xəta mesajlarını göstərmək kimi prosesləri apardığımız strukturdur.
+Angular kimi JavaScript təməlli web layihə framework'ləri, form proseslərini daha təkmilləşmiş və mürəkkəb bir şəkildə idarə etməyimizi təmin edən tool'lar və library'lər təmin edir.
+
+Angular'da, **Template-Driven Form** və **Model-Driven/Reactive Form** olmaqla iki fərqli form yanaşması mövcuddur.
+
+### Template-Driven Form Yanaşması
+
+Template-Driven Form yanaşması, əsasən sürətli form yaratmaq istəyərkən və ya kiçik form işləri üçün istifadə olunur. TDF, HTML form'ları üzərində birbaşa işləyir və form məntiqi template(şablon) tərəfində idarə olunur. TDF yanaşmasını istifadə edərkən form tag'inə `ngForm`, hər bir form elementinə isə `ngModel` directive'i verilir.
+
+```ts I'm A Tab
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { NgForm } from "@angular/forms";
+@Component({
+  selector: "app-root",
+  template: `<form #frm="ngForm" (ngSubmit)="onSubmit(frm.value)">
+    <input type="text" name="name" placeholder="Name" ngModel />
+    <br />
+    <input type="text" name="surname" placeholder="Surname" ngModel />
+    <br />
+    <select name="job" ngModel>
+      <option value="0">Teacher</option>
+      <option value="1">Student</option>
+      <option value="2">Software Developer</option>
+      <option value="3">Chef</option>
+    </select>
+    <button>Send</button>
+  </form>`,
+})
+export class AppComponent {
+  @ViewChild("frm", { static: true }) frm!: NgForm;
+
+  //Form'dakı dataların əldə olunması:
+  onSubmit(data: { name: string; surname: string; job: string }) {
+    console.log(data);
+    var value = this.frm.form.get("name")?.value;
+    console.log(value);
+  }
+}
+```
+
+**Qeyd:** Template-Driven yanaşmasını istifadə etmək üçün app.module'a `FormsModule` import edilməlidir.
+
+### Model-Driven/Reactive Form Yanaşması
+
+Template-Driven Form'lara nəzərən daha mürəkkəb form prosesləri üçün istifadə olunan yanaşmadır. Model-Driven yanaşması, TypeScript siniflərinnən istifadə olunaraq form məntiqini idarə edir. Form məntiqi kod tərəfində yazılır və form idarəsi daha mürəkkəb ssenarilər üçün daha uyğundur. Kod tərəfdə yaradılan form obyekti HTML'dəki əlaqəli form etiketlərinə bind olunur. Model-Driven Form'lar həmçinin Reactive Forms olaraq da adlandırılır çünki, form elementlərindəki dəyişikliklər əlaqəli obyekt tərəfindən reactive(dinamik) şəkildə track olunur.
+
+```ts
+import { Component, OnInit } from "@angular/core";
+import { FormControl, FormGroup } from "@angular/forms";
+@Component({
+  selector: "app-root",
+  template: `<form [formGroup]="frm" (ngSubmit)="onSubmit(frm.value)">
+    <input type="text" placeholder="Name" formControlName="name" />
+    <br />
+    <input type="text" placeholder="Surname" formControlName="surname" />
+    <br />
+    <select formControlName="job">
+      <option value="0">Teacher</option>
+      <option value="1">Student</option>
+      <option value="2">Software Developer</option>
+      <option value="3">Chef</option>
+    </select>
+    <button>Send</button>
+  </form>`,
+})
+export class AppComponent implements OnInit {
+  frm!: FormGroup;
+
+  ngOnInit(): void {
+    this.frm = new FormGroup({
+      name: new FormControl(),
+      surname: new FormControl(),
+      job: new FormControl(),
+    });
+  }
+
+  onSubmit(data: { name: string; surname: string; job: string }) {
+    console.log(data);
+  }
+}
+```
+
+**Qeyd:** Reactive forms yanaşmasını istifadə etmək üçün app.module'a `ReactiveFormsModule` import edilməlidir.
+
+### Angular Form Anlayışları
+
+Angular Form'larında hansı yanaşmadan istifadə etməyimizdən asılı olmayaraq 4 əsas anlayış mövcuddur.
+
+1. **FormGroup** : Əlaqəli form sahələrini/formun özünü təmsil edən və bir qrup FormControl obyekti ehtiva edən obyektir. Bir form'da birdən çox FormGroup ola bilməz.
+2. **FormArray** : Form içərisində dinamik olaraq yaradılan control'ləri edən array obyektidir. Form'da ola biləcək birdən çox təkrarlanan sahələrdə(Likedin skills) istifadə etmək üçün istifadə olunur.
+3. **FormControl** : Form elementinin dəyərini almaq, təsdiqləmə və dəyişiklik vəziyyətini təmsil edən form control'dır.
+4. **FormBuilder** : FormGroup, FormControl və FormArray obyektlərini yaratmağımızı sadələşdirən servisdir. İçərisindəki hazır funksiyalar sayəsində form'u sürətli yarada bilməyimizi və konfiqurasiya etməyimizi təmin edir.
+
+```ts
+import { Component } from "@angular/core";
+import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
+@Component({
+  selector: "app-root",
+  template: `<form [formGroup]="frm" (ngSubmit)="onSubmit(frm.value)">
+    <input type="text" placeholder="Name" formControlName="name" />
+    <br />
+    <input type="text" placeholder="Surname" formControlName="surname" />
+    <br />
+    <select formControlName="job">
+      <option value="0">Teacher</option>
+      <option value="1">Student</option>
+      <option value="2">Software Developer</option>
+      <option value="3">Chef</option>
+    </select>
+
+    <div formArrayName="tels">
+      <div *ngFor="let tel of tels.controls; let i = index">
+        <div [formGroupName]="i">
+          {{ i }}. Name :
+          <input type="text" formControlName="telName" placeholder="tel name" />
+          {{ i }}. Tel :
+          <input
+            type="text"
+            formControlName="telValue"
+            placeholder="tel value"
+          />
+          <button (click)="deleteTel(i)" style="color:red">X</button>
+        </div>
+      </div>
+      <a (click)="addTel()">Add Tel</a>
+    </div>
+
+    <button>Send</button>
+  </form>`,
+})
+export class AppComponent {
+  frm!: FormGroup;
+
+  constructor(private formBuilder: FormBuilder) {
+    this.frm = formBuilder.group({
+      name: [""],
+      surname: [""],
+      job: [""],
+      tels: formBuilder.array([]),
+    });
+  }
+  get tels() {
+    return this.frm.controls["tels"] as FormArray;
+  }
+
+  addTel() {
+    const tel = this.formBuilder.group({
+      telName: [""],
+      telValue: [""],
+    });
+    this.tels.push(tel);
+  }
+
+  deleteTel(telIndex: number) {
+    this.tels.removeAt(telIndex);
+  }
+
+  onSubmit(data: { name: string; surname: string; job: string; tels: [] }) {
+    console.log(data);
+  }
+}
+```
+
+_Result:_
+
+https://user-images.githubusercontent.com/62793862/231404247-c40c9558-1c8f-4d01-8238-edfe60faa85c.mp4
+
+**Qeyd** : Bu anlayışların referansları ilə işləmək Reactive forms yanaşmasında aparılır amma TDF yanaşmasında da arxa tərəfdə bu referanslar işləyir.
+
+## Lesson - 13 Template Driven Forms Yanaşması
