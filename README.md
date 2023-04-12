@@ -788,3 +788,186 @@ https://user-images.githubusercontent.com/62793862/231404247-c40c9558-1c8f-4d01-
 **Qeyd** : Bu anlayışların referansları ilə işləmək Reactive forms yanaşmasında aparılır amma TDF yanaşmasında da arxa tərəfdə bu referanslar işləyir.
 
 ## Lesson - 13 Template Driven Forms Yanaşması
+
+TDF, form'dakı bütün proseslərin və validation'ların template üzərində directive'lər və attribute'lar istifadə olunaraq aparıldığı yanaşmadır.
+TDF da bütün proseslərin template üzərində aparıldığı üçün component class'ında çox az kod yazılır.
+
+Template-Driven Forms yanaşmasında istifadə olunan əsas directive'lər `ngForm` və `ngModel` - dir.
+
+- ngForm - Form'un qurulmasının təmin edən əsas directive'dir.
+- ngModel - Form içərisində istifadə olunacaq control'lərin işarətlənəcəyi directive'dir. Həmçinin bu directive Two Way Databinding mexanizmasından istifadə edir.
+
+### Template-Driven Forms yanaşması ilə form yaratmağın detalları:
+
+- TDF yanaşması ilə form yaratma üçün əvvəlcə lazım olan form directive'lərini və obyektləri özündə ehtiva edən `FormsModule` module'unu əlaqəli module'a import etməliyik.
+
+- Hansı form'u TDF olaraq istifadə edəcəyiksə ona `ngForm` directive'i ilə işarətləməliyik. Bu directive form'un idarə olunmasını, validation proseslərini və form data'larının manipulyasiya olunmasını təmin edir. `ngForm` directive'i arxa tərəfdə FormGroup obyekti yaradaraq onu təmsil edir.
+
+- Form içərisində istifadə olunacaq control'ları `ngModel` directive'i ilə işarətlənməlidir.
+
+- Form doldurulduğu zaman component class'ına data'ların göndərilə bilinməsi üçün `ngSubmit` event'ından istifadə edirik.
+
+**ngForm Directive Təfərrüatları:**
+
+- `value` - FormGroup içərisində ki, FormControl obyektinin dəyərlərini verir.
+
+- `valid` - Form valid olarsa _true_, əks halda _false_ dəyərini verir.
+
+- `touched` - İstifadəçi form üzərində ən az bir sahəyə dəyər daxil etdisə _true_ dəyərini verir.
+
+- `Submitted` - Form submit olarsa _true_ dəyərini verir.
+
+```ts
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { NgForm } from "@angular/forms";
+@Component({
+  selector: "app-root",
+  template: `<form #frm="ngForm" (ngSubmit)="onSubmit(frm.value)">
+    <input type="text" name="name" placeholder="Name" ngModel />
+    <br />
+    <input type="text" name="surname" placeholder="Surname" ngModel />
+    <br />
+    <select name="job" ngModel>
+      <option value="0">Teacher</option>
+      <option value="1">Student</option>
+      <option value="2">Software Developer</option>
+      <option value="3">Chef</option>
+    </select>
+    <button>Send</button>
+  </form>`,
+})
+export class AppComponent {
+  //Form'u component class'ında referans etmək üçün ViewChild decorator'nu aşağıdakı kimi istifadə etməliyik.
+  @ViewChild("frm", { static: true }) frm!: NgForm;
+
+  onSubmit(data) {
+    console.log(`Value : ${this.frm.value}`);
+    console.log(`Valid : ${this.frm.valid}`);
+    console.log(`Touched : ${this.frm.touched}`);
+    console.log(`Submitted : ${this.frm.submitted}`);
+
+    console.log(data);
+  }
+}
+```
+
+**FormControl Təfərrüatları:**
+
+- `value` - Əlaqəli control'un dəyərini verir.
+
+- `valid` - Control'un dəyəri keçərlidirsə _true_, əks halda _false_ dəyərini verir.
+
+- `invalid` - Control'un dəyəri keçərli deyilsə _true_, əks halda _false_ dəyərini verir.
+
+- `touched` - elementə hər-hansısa bir dəyər daxil olduqda _true_ dəyirini qaytarır.
+
+**Qeyd: TDF'da yuxarıdakı property'lərin istifadəsi üçün template reference variable (#fname) istifadə olunmalıdır**
+
+```ts
+<input type="text" name="firstname" #fname="ngModel" ngModel>
+
+<!-- Form kontrol elemanının değerini ve geçerlilik durumunu kullanma -->
+<p>Value: {{fname.value}}</p>
+<p>Valid: {{fname.valid}}</p>
+<p>Errors: {{fname.errors | json}}</p>
+```
+
+### ngModelGroup Direcrive'i Nədir?
+
+Angular'da bir neçə form control'unu qruplamaq üçün istifadə olunan directive'dir.
+
+```ts
+import { Component, ViewChild } from "@angular/core";
+import { NgForm } from "@angular/forms";
+@Component({
+  selector: "app-root",
+  template: `<form #frm="ngForm" (ngSubmit)="onSubmit(frm.value)">
+    <div ngModelGroup="name">
+      <input type="text" name="first" placeholder="FirstName" ngModel />
+      <br />
+      <input type="text" name="middle" placeholder="MiddleName" ngModel />
+      <br />
+      <input type="text" name="last" placeholder="LastName" ngModel />
+    </div>
+    <input type="text" name="surname" placeholder="Surname" ngModel />
+    <br />
+    <select name="job" ngModel>
+      <option value="0">Teacher</option>
+      <option value="1">Student</option>
+      <option value="2">Software Developer</option>
+      <option value="3">Chef</option>
+    </select>
+    <button>Send</button>
+  </form>`,
+})
+export class AppComponent {
+  @ViewChild("frm", { static: true }) frm!: NgForm;
+
+  onSubmit(data: any) {
+    console.log(data.name.last);
+    console.log(data.surname);
+  }
+}
+```
+
+### TDF-da Form control'larına başlanğıc dəyər mənimsətmək:
+
+Bu proses üçün `setValue` funksiyasından istifadə olunur.
+
+```ts
+import { Component, ViewChild } from "@angular/core";
+import { NgForm } from "@angular/forms";
+
+@Component({
+  selector: "app-my-form",
+  template: `
+    <form #myForm="ngForm">
+      <input [(ngModel)]="firstName" name="firstName" />
+      <input [(ngModel)]="lastName" name="lastName" />
+      <input [(ngModel)]="email" name="email" />
+      <button type="submit">Send</button>
+    </form>
+  `,
+})
+export class MyFormComponent {
+  @ViewChild("myForm", { static: true }) form: NgForm;
+
+  firstName: string;
+  lastName: string;
+  email: string;
+
+  constructor() {
+    this.firstName = "John";
+    this.lastName = "Doe";
+    this.email = "john.doe@example.com";
+
+    this.form.setValue({
+      firstName: this.firstName,
+      lastName: this.lastName,
+      email: this.email,
+    });
+
+    this.form.controls["lastName"].setValue("Mov");
+  }
+}
+```
+
+**Form'un bir hissəsinə dəyər mənimsətmək:**
+Bunun üçün `patchValue` funksiyasından istifadə edirik.
+
+```ts
+this.form.control.patchValue({
+  surname: "Mov",
+  email: "elshan.mov.772@gmail.com",
+});
+```
+
+**Form dəyərlərini reset'ləmək:**
+
+```ts
+this.form.reset();
+this.form.resetForm();
+this.form.onReset();
+```
+
+## Lesson - 14 Reactive Forms Yanaşması
