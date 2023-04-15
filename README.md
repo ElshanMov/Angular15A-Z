@@ -872,7 +872,7 @@ export class AppComponent {
 <p>Errors: {{fname.errors | json}}</p>
 ```
 
-### ngModelGroup Direcrive'i Nədir?
+### ngModelGroup Directive'i Nədir?
 
 Angular'da bir neçə form control'unu qruplamaq üçün istifadə olunan directive'dir.
 
@@ -971,3 +971,146 @@ this.form.onReset();
 ```
 
 ## Lesson - 14 Reactive Forms Yanaşması
+
+Reactive Forms, component class'ında form'un strukturunun object olaraq(FormGroup) tutulduğu form yanaşmasıdır. Yəni form strukturunda istifadə olunan FormGroup, FormArray və FormControl kimi bütün obyektləri özümüzün yaradırıq və konfiqurasiya edirik. Bunlarla yanaşı form'un validation qaydaları ilə birlikdə əlavə prosesləri də form obyekti üzərindən həyata keçiririk.
+
+### Reactive forms yanaşmasın da istifadə olunan əsas directive'lər:
+
+- `formGroup` - Form'un yaradılmasını təmin edən əsas directive'dir. Form elementlərinin component class'ındakı model ilə əlaqələnməsini təmin edir.
+
+- `formControlName` - FormGroup obyekti içərisindəki hərhansısa bir FormControl'ü form elementlərindən birinə bağlamaq və əlaqələndirmək üçün istifadə olunan directive'dir.
+
+### Reactive Forms yanaşması ilə form yaratmağın detalları:
+
+- Reactive forms yanaşması ilə form yaratma üçün əvvəlcə lazım olan form directive'lərini və obyektləri özündə ehtiva edən `ReactiveFormsModule` module'unu əlaqəli module'a import etməliyik.
+
+- Daha sonra yaradılacaq form'un modelini yaradırıq və lazım olan FormControl'ları yazırıq. Bunun üçün `FormBuilder` obyektinnən istifadə edə bilərik.
+
+- Davamın da isə HTML hissəsində form'u yaradırıq və 'form' etiketinə `formGroup` directive'i ilə yaradılan model'ə, form control'larını isə modeldəki əlaqəli FormControl'larına `formControlName` directive'i ilə bağlayırıq(binding).
+
+- Son olaraq, istifadəçi tərəfindən doldurulan modelin göndərilməsi üçün `ngSubmit` event'inə funksiya yazaraq data'nı əldə edirik.
+
+```ts
+@Component({
+  selector: "app-my-form",
+  template: `
+    <form [formGroup]="frm" (onSubmit)="onSubmit(frm.value)">
+      <input type="text" formControlName="name" />
+      <input type="text" formControlName="surname" />
+      <input type="text" formControlName="email" />
+      <input type="text" formControlName="tel" />
+      <button type="submit">Send</button>
+    </form>
+  `,
+})
+export class MyFormComponent {
+  frm!: FormGroup;
+
+  constructor(private formBuilder: FormBuilder) {
+    this.frm = formBuilder.group({
+      name: [""],
+      surname: ["mammadov"], //default dəyər
+      email: [""],
+      tel: [""],
+    });
+  }
+  onSubmit(data: any) {
+    console.log(data);
+  }
+}
+```
+
+### formGroupName Directive'i
+
+Template-Driven Forms yanaşmasındakı, `ngModelGroup` directive'nin Reactive Forms'dakı qarşılığıdır.
+
+```ts
+@Component({
+  selector: "app-my-form",
+  template: `
+    <form [formGroup]="frm" (onSubmit)="onSubmit(frm.value)">
+      <input type="text" formControlName="name" /> <br />
+      <input type="text" formControlName="surname" /> <br />
+      <input type="text" formControlName="email" /> <br />
+      <input type="text" formControlName="tel" />
+      <div formGroupName="address">
+        <input type="text" name="Country" formControlName="country" /> <br />
+        <input type="text" name="City" formControlName="city" /> <br />
+        <input type="text" name="Address" formControlName="address" /> <br />
+      </div>
+      <button type="submit">Send</button>
+    </form>
+  `,
+})
+export class MyFormComponent {
+  frm!: FormGroup;
+
+  constructor(private formBuilder: FormBuilder) {
+    this.frm = formBuilder.group({
+      name: ["elshan"],
+      surname: ["mammadov"],
+      email: ["elshan.mov.772@gmail.com"],
+      tel: ["123"],
+      address: formBuilder.group({
+        country: ["", Validators.required], //Validation
+        city: [""],
+        address: [
+          "",
+          [
+            //Array şəklində validation yazmaq
+            Validators.required,
+            Validators.max(100),
+          ],
+        ],
+      }),
+    });
+  }
+  onSubmit(data: any) {
+    console.log(data);
+  }
+}
+```
+
+### `onlySelf` parametri:
+
+Angular'da default olaraq hər hansısa bir form elementinin dəyərində dəyişiklik olduqda əlaqəli form validation vəziyyətlərinin hamısını pilləli şəkildə hamısını yoxlayacaq. Bunu ləğv etmək üçün `onlySelf` parametrini istifadə edərək bütün form'u yox, onlySelf'in yazıldığı control'u yoxlayacaq.
+
+```ts
+this.frm.controls["name"].serValue("Elshan", { onlySelf: true }); //form valid olmayacaq. Template də dəyişiklik olarsa valid olacaq.
+```
+
+### `valueChanges` və `statusChanges` event'ları:
+
+- `valueChanges` - Form'dakı control'lardan birinin dəyəri dəyişərsə işə düşür.
+
+```ts
+this.frm.valueChanges.subscribe({
+  next: (data) => {
+    console.log(data);
+  },
+});
+
+this.frm.get("name").valueChanges.subscribe({
+  next: (data) => {
+    console.log(data);
+  },
+});
+```
+
+- `statusChanges` - Form'dakı control'lardan birinin dəyəri dəyişərsə işə düşür.
+
+```ts
+this.frm.statusChanges.subscribe({
+  next: (data) => {
+    console.log(data);
+  },
+});
+
+this.frm.get("name").statusChanges.subscribe({
+  next: (data) => {
+    console.log(data);
+  },
+});
+```
+
+## Lesson - 15 Angular Form'da state dəyişdirmə funksiyaları:
