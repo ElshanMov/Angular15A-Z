@@ -1113,4 +1113,80 @@ this.frm.get("name").statusChanges.subscribe({
 });
 ```
 
-## Lesson - 15 Angular Form'da state dəyişdirmə funksiyaları:
+## Lesson - 15 Changing the Status / Angular Form'da state dəyişdirmə funksiyaları:
+
+Changing the Status anlayışı, Angular'dakı form strukturunun state'ni programmatic şəkildə dəyişdirməyimizi təmin edən funksiyalar toplusunu ifadə edir. Bu funksiyalar ilə form'un və form'dakı control'ların state'ni programmatic olaraq və yaxud istifadəçi interfeysi ilə dəyişdirə bilərik.
+
+### İstifadə oluan funksiyalar:
+
+1. `markAsTouched` - Bu funksiya hər-hansısa bir form'da və yaxud əlaqəli form içərisindəki control'da proses aparılarsa form'un və əlaqəli control'un `touched` property'si **true** olaraq dəyişəcəkdir. Yəni əlaqəli form'a və yaxud form control'a toxunulduğu programmatic olaraq ifadə edilmiş olacaq.
+
+```ts
+this.frm.get("name").markAsTouched(); //form touched: true
+this.frm.markAsTouched(); //'name' control touched: true
+```
+
+**Qeyd:** Əgər bu funksiyada `onlySelf` parametri true dəyərini versək, harda istifadə etsək sadəcə o strukturun `touched` property'sinə təsir edəcək.
+
+```ts
+this.frm.get("name").markAsTouched({ onlySelf: true }); // form touched: false
+// `name` control touched: true
+```
+
+**Qeyd:** onlySelf parametrni digər funksiyalarda da istifadə edə bilərik.
+
+2. `markAllAsTouched` - Bu funksiya markAsTouched funksiyasında olduğu kimi control'un və o control'un altındakı bütün control'ların touched property'sinin dəyərini true olaraq dəyişəcəkdir.
+
+```ts
+`<div formGroupName="address">
+  <input type="text" name="Country" formControlName="country" /> <br />
+  <input type="text" name="City" formControlName="city" /> <br />
+  <input type="text" name="Address" formControlName="address" /> <br />
+</div>`;
+
+this.frm.get("address").markAsTouched(); //Address form control'una markAsTouched funksiyası ilə programmatic olaraq müdaxilə etsək, sadəcə address control'u ilə form bundan təsirlənəcək.
+//form touched: true
+// `address` control touched: true
+// `country` control touched: false
+
+this.frm.get("address").markAllAsTouched(); //Address form control'una markAllAsTouched funksiyası ilə programmatic olaraq müdaxilə etsək,  address control'u ilə altındakı bütün control'lar bundan təsirlənəcək lakin form bundan təsirlənməyəcək.
+//form touched: false
+// `address` control touched: true
+// `country` control touched: true
+```
+
+3. `markAsUntouched` - Bu funksiya ilə form və yaxud from control'nun touched property'si **false** olacaq. Əlaqəli strukturun toxunulmadığı aid programmatic toxunuşlar edilərkən üstünlük verilir.
+
+```ts
+this.frm.get("name").markAsUntouched(); // form touched: true
+// `name` control touched: false
+
+this.frm.markAsUntouched(); // form touched: false
+//'name' control touched: false
+```
+
+4. `markAsDirty` - Bu funksiya ilə əlaqəli form'un və yaxud form control'nun `dirty` property'sinin dəyəri programmatic olaraq dəyişdirilə bilinməkdədir.
+
+```ts
+this.frm.markAdDirty(); //form dirty: true
+this.frm.get("name").markAsDirty(); //'name' control dirty: true
+```
+
+5. `markAsPristine` - Bu funksiya ilə əlaqəli form'un və yaxud control'nun `pristine` dəyərini true olaraq dəyişdirməyimizi təmin etməkdədir. Beləliklə, əlaqəli form'a heç toxulunmadığı, yəni form'da heç bir iş görülməyib mahiyətində iş görə bilərik.
+
+```ts
+this.frm.get("name").markAsPristine(); //form pristine: true
+this.frm.markAdDirty(); //'name' control pristine: true
+```
+
+**Qeyd:** Angular'da `pristine` property'si, form control'nun başlanğıcdakı(ilk yükləndiyi və ya sıfırlandığı) vəziyyətini təmsil edən boolean dəyərdir. `pristine` property'si, form control'nun istifadəçidən dəyər daxil etdiyi dəyəri dəyişdirdiyi anda **false** dəyəri alır və istifadəçinin form'u təmizləmə və ya sıfırlama prosesi apardığın da **true** dəyərini alır.
+
+6. `disbale` - İstifadə olunduğu form'un və yaxud form control'un deaktiv olmasını təmin edir.
+7. `enable` - İstifadə olunduğu form'un və yaxud form control'un aktivləşdirməsini təmin edir.
+
+```ts
+this.frm.get("name").disable();
+this.frm.get("name").enable();
+```
+
+## Lesson - 16 Validation
